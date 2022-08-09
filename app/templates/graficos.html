@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <meta http-equiv='cache-control' content='no-cache'>
+        <meta http-equiv='expires' content='0'>
+        <meta http-equiv='pragma' content='no-cache'>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" 
+        integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs" 
+        crossorigin="anonymous"></script>
+        <title>Gráficos</title>
+
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm bg-dark">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/listagem">LISTAGEM</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/insercao">NOVO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/graficos">GRÁFICOS</a>
+                </li>
+            </ul>
+        </nav>
+        <br />
+        <div class="container">
+            <h2>Gráficos</h2>
+            <input type="hidden" id="salarioM" value="{{salarioM}}" />
+            <input type="hidden" id="salarioF" value="{{salarioF}}" />
+            <input type="hidden" id="idadeM" value="{{idadeM}}" />
+            <input type="hidden" id="idadeF" value="{{idadeF}}" />
+            <button type="button" class="btn btn-sm btn-primary" onclick="plot('bar')">Faixa Etária</button>
+            <button type="button" class="btn btn-sm btn-primary" onclick="plot('pie')">Faixa Salarial</button>
+            <br />
+            <br />
+            <center>
+                <div id="grafico" style="width: 800px; height: 400px">
+                
+                </div>
+            </center>
+        </div>
+        <script>
+            function plot(type='bar') {
+
+                type = type.toString().toLowerCase().trim()
+
+                const salarioM = Number(document.getElementById('salarioM').value.replace(',', '.'))
+                const salarioF = Number(document.getElementById('salarioF').value.replace(',', '.'))
+
+                const idadeM = Number(document.getElementById('idadeM').value.replace(',', '.'))
+                const idadeF = Number(document.getElementById('idadeF').value.replace(',', '.'))  
+
+                let serie = {}
+                if(type === 'pie') {
+                    serie = {
+                        values: [salarioM,salarioF],
+                        labels: ['Masculino', 'Feminino'],
+                        type: type
+                    }
+                } else {
+                    serie = {
+                        x: ['Masculino', 'Feminino'],
+                        y: [idadeM, idadeF],
+                        type: type
+                    }
+                }
+                const data = [serie]
+                Plotly.newPlot('grafico', data)
+            }
+            plot()
+        </script>
+    </body>
+</html>

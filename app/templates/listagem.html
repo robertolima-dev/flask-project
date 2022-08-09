@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <meta http-equiv='cache-control' content='no-cache'>
+        <meta http-equiv='expires' content='0'>
+        <meta http-equiv='pragma' content='no-cache'>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" 
+        integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs" 
+        crossorigin="anonymous"></script>
+        <title>Listagem</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm bg-dark">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/listagem">LISTAGEM</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/insercao">NOVO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/graficos">GRÁFICOS</a>
+                </li>
+            </ul>
+        </nav>
+        <br />
+        <div class="container">
+            <h2>Listagem</h2>
+            <form action="/consulta" method="POST" name="frm_consulta" class="ml-3">
+                <div class="form-group">
+                    <div class="row">
+                        <input type="text" class="form-control col-md-5" name="consulta" placeholder="Digite aqui sua consulta"/>
+                        <select class="form-control col-md-2" name="campo">
+                            <option value="nome">Nome</option>
+                            <option value="sexo">Sexo</option>
+                            <option value="idade">Idade</option>
+                            <option value="salario">Salário</option>
+                        </select>
+                        <button type="submit" class="btn btn-success">Consultar</button>
+                    </div>
+                </div>
+            </form>
+            <div style="overflow: scroll; height: 310px; width: 100%;" align="center">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a href="/ordenacao/id/{{ordem}}">ID</a>
+                            </th>
+                            <th>
+                                <a href="/ordenacao/nome/{{ordem}}">Nome</a>
+                            </th>
+                            <th>
+                                <a href="/ordenacao/idade/{{ordem}}">Idade</a>
+                            </th>
+                            <th>
+                                <a href="/ordenacao/sexo/{{ordem}}">Sexo</a>
+                            </th>
+                            <th>
+                                <a href="/ordenacao/salario/{{ordem}}">Salário</a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pessoa in pessoas %}
+                        <tr>
+                            <td nowrap="true">
+                                <a href="/selecao/{{pessoa.id}}">{{pessoa.id}}</a>
+                            </td>
+                            <td nowrap="true">
+                                {{pessoa.nome}}
+                            </td>
+                            <td nowrap="true">
+                                {{pessoa.idade}}
+                            </td>
+                            <td nowrap="true">
+                                {{pessoa.sexo}}
+                            </td>
+                            <td nowrap="true">
+                                {{pessoa.salario}}
+                            </td>
+                            <td>
+                                <a href="/edicao/{{pessoa.id}}" class="btn btn-primary" role="button">Editar</a>
+                            </td>
+                            <td>
+                                <a href="/delecao/{{pessoa.id}}" class="btn btn-danger" role="button">Deletar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="#" style="float: right;" onclick="relatorio()">Imprimir relatório</a>
+            <textarea id="dados" style="display: none;">
+                {% for pessoa in pessoas %}
+                    {{pessoa.nome}}|{{pessoa.idade}}|{{pessoa.sexo}}|{{pessoa.salario}}#
+                {% endfor %}                
+            </textarea>
+
+            <script>
+                function relatorio() {
+                    console.log('Entrei aqui')
+                    const doc = new jsPDF({orientation: 'landscape'})
+                    const text = document.getElementById('dados').innerText
+                    const arrayLinhas = text.split('#')
+                    let conteudo = 'RELATORIO DE PESSOAS \n\n'
+                    for(let linha=0; linha<arrayLinhas.length; linha++) {
+                        let arrayColunas = arrayLinhas[linha].split('|')
+                        arrayColunas[0] = arrayColunas[0].trim().padEnd(35, '*')
+                        if(arrayColunas[0].indexOf('*') > 0) {
+                            conteudo += `Nome: ${arrayColunas[0]} - ` +
+                                        `Idade: ${arrayColunas[1]} - ` +
+                                        `Sexo: ${arrayColunas[2]} - ` +
+                                        `Salário:  R$ ${arrayColunas[3]} \n`
+                        }
+                    }
+                    doc.setFontSize(12)
+                    doc.setFont('Courier')
+                    doc.text(conteudo, 30, 30)
+                    doc.save('relatorio.pdf')
+                }
+            </script>
+        </div>
+    </body>
+</html>

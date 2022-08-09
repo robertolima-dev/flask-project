@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <meta http-equiv='cache-control' content='no-cache'>
+        <meta http-equiv='expires' content='0'>
+        <meta http-equiv='pragma' content='no-cache'>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" 
+        integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs" 
+        crossorigin="anonymous"></script>
+        <title>Deletar</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm bg-dark">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/listagem">LISTAGEM</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/insercao">NOVO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/graficos">GRÁFICOS</a>
+                </li>
+            </ul>
+        </nav>
+        <br />
+        <div class="container">
+            <h2>Deletar</h2>
+            <form action="/salvar_delecao" method="POST" name="frm_delecao" class="ml-3">
+                <input type="hidden" name="id" value="{{pessoa.id}}" />
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input value="{{pessoa.nome}}" type="text" class="form-control" name="nome" disabled="true" />
+                </div>
+                <div class="form-group">
+                    <label for="idade">Idade:</label>
+                    <input value="{{pessoa.idade}}" type="number" class="form-control" name="idade" min="16" max="75" disabled="true" />
+                </div>
+                <div class="form-group">
+                    <label for="sexo">Sexo:</label>
+                    <select class="form-control" name="sexo" disabled="true">
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="salario">Salário:</label>
+                    <input value="{{pessoa.salario}}" type="text" class="form-control" name="salario" disabled="true" />
+                </div>
+                <a href="/listagem" class="btn btn-secondary" role="button">Cancelar</a>
+                <button type="submit" class="btn btn-danger">Deletar</button>
+            </form>
+        </div>
+
+        <script>
+            let sexo = document.getElementsByName('sexo')[0]
+            sexo.value = "{{pessoa.sexo}}"
+        </script>
+    </body>
+</html>
